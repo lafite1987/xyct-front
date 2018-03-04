@@ -15,13 +15,13 @@ export const list = params => { return axios.post(`${prefix}/account/list.json`,
 //新建账户
 export const addAccount = params => { return axios.post(`${prefix}/account/add.json`, params); };
 //更新账户
-export const updateAccount = (id, params) => { return axios.post(`${prefix}/account/${id}/update.json`, params); };
+export const update = (id, params) => { return axios.post(`${prefix}/account/${id}/update.json`, params); };
 //删除账户
 export const deleteAccount = (id) => { return axios.get(`${prefix}/account/${id}/delete.json`); };
 //获取登录用户信息
-export const getAccountInfo = () => { return axios.get(`${prefix}/sys/getUserInfo.json`); };
+export const getAccountInfo = () => { return axios.get(`${prefix}/user/getUserInfo.json`); };
 //获取用户详情
-export const detailAccount = (id) => { return axios.get(`${prefix}/account/${id}/detail.json`); };
+export const detail = (id) => { return axios.get(`${prefix}/account/${id}/detail.json`); };
 
 //获取用户的角色信息
 export const getAccountRole = (accountId, params) => { return axios.post(`${prefix}/account/${accountId}/role/list.json`, params); };

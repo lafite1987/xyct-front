@@ -7,9 +7,15 @@ import Project from './views/project/Project.vue'
 import ProjectAdd from './views/project/ProjectAdd.vue'
 import ProjectUpdate from './views/project/ProjectUpdate.vue'
 
-import Db from './views/db/Db.vue'
-import DbAdd from './views/db/DbAdd.vue'
-import DbUpdate from './views/db/DbUpdate.vue'
+import User from './views/user/User.vue'
+import UserAdd from './views/user/UserAdd.vue'
+import UserUpdate from './views/user/UserUpdate.vue'
+
+import Account from './views/account/Account.vue'
+import AccountAdd from './views/account/AccountAdd.vue'
+import AccountUpdate from './views/account/AccountUpdate.vue'
+
+import Order from './views/order/Order.vue'
 
 let routes = [{
     path: '/login',
@@ -47,28 +53,57 @@ let routes = [{
 {
     path: '/',
     component: Home,
-    name: '订单管理',
+    name: '业务管理',
     children: [
         {
-            path: '/db',
-            component: Db,
-            name: '订单列表',
+            path: '/user',
+            component: User,
+            name: '用户列表',
             children: [{
                 path: 'add',
-                component: DbAdd,
-                name: 'dbAdd',
-                alias: '新建数据库'
+                component: UserAdd,
+                name: 'userAdd',
+                alias: '添加用户'
             },
             {
                 path: ':id/update',
-                component: DbUpdate,
-                name: 'dbUpdate',
-                alias: '更新数据库'
+                component: UserUpdate,
+                name: 'userUpdate',
+                alias: '更新用户'
             },
             ]
+        }, {
+            path: '/order',
+            component: Order,
+            name: '订单列表',
+            children: [
+            ]
+        }, 
+    ]
+}, 
+{
+    path: '/',
+    component: Home,
+    name: '系统管理',
+    children: [{
+            path: '/account',
+            component: Account,
+            name: '账户管理',
+            children: [{
+                path: 'add',
+                component: AccountAdd,
+                name: 'accountAdd',
+                alias: '添加账户'
+            },
+            {
+                path: ':id/update',
+                component: AccountUpdate,
+                name: 'accountUpdate',
+                alias: '更新账户'
+            }]
         }
     ]
-},
+}, 
 {
     path: '*',
     redirect: {

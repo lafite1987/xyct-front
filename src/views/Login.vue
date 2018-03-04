@@ -3,8 +3,8 @@
     <h3 class="title">系统登录</h3>
     <el-form-item prop="accountType">
       <el-select v-model="authInfo.accountType" placeholder="账号类型">
+        <el-option value="USERNAME" label="账户名" />
         <el-option value="PHONE" label="手机" />
-        <el-option value="RTX" label="RTX" />
       </el-select>
     </el-form-item>
     <el-form-item prop="account">
@@ -31,7 +31,7 @@ export default {
       captchaGetting: false,
       logining: false,
       authInfo: {
-        accountType: 'RTX',
+        accountType: '账户名',
         account: '',
         captcha: ''
       },

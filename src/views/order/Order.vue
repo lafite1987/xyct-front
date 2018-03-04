@@ -2,13 +2,13 @@
 	<div>
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
-				<el-form-item label="数据库名">
-					<el-input v-model="queryParam.dbName" placeholder="数据库名"></el-input>
+				<el-form-item label="订单号">
+					<el-input v-model="queryParam.orderId" placeholder="订单号"></el-input>
 				</el-form-item>
-				<el-form-item label="库类型">
-					<el-select filterable v-model="queryParam.dbType">
+				<el-form-item label="支付状态">
+					<el-select filterable v-model="queryParam.payStatus">
 						<el-option value="" label="所有" />
-						<el-option v-for="item in dbTypeList" :value="item" :label="item" :key="item" />
+						<el-option v-for="item in payStatusList" :value="item.code" :label="item.name" :key="item.code" />
 					</el-select>
 				</el-form-item>
 				<el-form-item>
@@ -17,23 +17,28 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<el-button type="primary" size="small" @click="$router.push({ name: 'dbAdd' })">新增数据库</el-button>
 		<el-table :data="pageInfo.tableList" highlight-current-row stripe border max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="index" width="60" align="center">
 			</el-table-column>
-			<el-table-column prop="dbName" label="数据库名" min-width="100">
+			<el-table-column prop="id" label="订单号" min-width="100">
 			</el-table-column>
-			<el-table-column prop="dbType" label="类型" min-width="100" align="center">
+			<el-table-column prop="productId" label="商品Id" min-width="100" align="center">
+			</el-table-column>
+      <el-table-column prop="productName" label="商品名称" min-width="100">
+			</el-table-column>
+      <el-table-column prop="amount" label="订单金额" min-width="100">
+			</el-table-column>
+      <el-table-column prop="payStatus" label="支付状态" min-width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="1" prop="scope.row.payStatus" label="创建">创建</el-tag>
+          <el-tag v-if="2" prop="scope.row.payStatus" >待支付</el-tag>
+        </template>
+			</el-table-column>
+      <el-table-column prop="userId" label="用户Id" min-width="100">
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" min-width="120" :formatter="dateFormat" sortable align="center">
 			</el-table-column>
 			<el-table-column prop="updateTime" label="更新时间" min-width="120" :formatter="dateFormat" sortable align="center">
-			</el-table-column>
-			<el-table-column label="操作" width="320" align="center">
-				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="$router.push({name:'dbUpdate',params: {id:scope.row.id}})">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-				</template>
 			</el-table-column>
 		</el-table>
 
@@ -68,13 +73,22 @@ export default {
           totalNum: 0
         }
       },
-      dbTypeList: [],
+      payStatusList: [{
+        code : 1,
+        name : "创建"
+      }, {
+        code : 2,
+        name : "待支付"
+      }, {
+        code : 3,
+        name : "已支付"
+      }],
       listLoading: false,
       sels: [],
-      //数据库检索参数
-      queryParam: storeSession.get("DB-QUERY") || {
-        dbName: null,
-        dbType: null,
+      //检索参数
+      queryParam: storeSession.get("ORDER-QUERY") || {
+        orderId: null,
+        payStatusType: null,
         page: {
           currentPage: 1,
           pageSize: 15,
@@ -84,9 +98,6 @@ export default {
     };
   },
   created() {
-    api.db.getDbConfig().then(res => {
-      this.dbTypeList = res.data.data.dbTypeList;
-    });
     this.loadPage();
   },
   watch: {
@@ -107,8 +118,8 @@ export default {
       this.sels = sels;
     },
     loadPage() {
-      storeSession.set("DB-QUERY", this.queryParam);
-      api.db.getDbList(this.queryParam).then(res => {
+      storeSession.set("ORDER-QUERY", this.queryParam);
+      api.order.list(this.queryParam).then(res => {
         this.pageInfo.tableList = res.data.data.list;
         this.pageInfo.page = res.data.data.page;
       });

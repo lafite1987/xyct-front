@@ -1,5 +1,5 @@
 <template>
-	<el-dialog title="更新数据库" :visible.sync="showDialog" size="small" @close="closeDialog">
+	<el-dialog title="新增数据库" :visible.sync="showDialog" size="small" @close="closeDialog">
 		<el-form :model="formEntity" label-width="100px" label-suffix=":">
 			<el-form-item label="数据库名称">
 				<el-input v-model="formEntity.dbName"></el-input>
@@ -28,7 +28,7 @@
 		</el-form>
 		<div slot="footer" class="dialog-footer">
 			<el-button size="small" @click="closeDialog">返 回</el-button>
-			<el-button size="small" type="primary" @click="handleUpdate">确 定</el-button>
+			<el-button size="small" type="primary" @click="handleAdd">确 定</el-button>
 		</div>
 	</el-dialog>
 </template>
@@ -53,7 +53,9 @@ export default {
 			showDialog: true,
 			//新建数据库实例
 			formEntity: {
-				dbType: ""
+				dbName: null,
+				dbType: null,
+				params: {}
 			},
 			dbTypeList: [],
 			initKeyMap: null,
@@ -61,20 +63,6 @@ export default {
 		}
 	},
 	created() {
-		api.db.detailDb(this.$route.params.id).then(res => {
-			this.formEntity = res.data.data;
-			let totalKV = this.formEntity.params;
-
-			this.formEntity.params = {};
-			this.customParams = [];
-
-			for (var i in totalKV) {
-				this.customParams.push({
-					key: i,
-					value: totalKV[i]
-				});
-			}
-		});
 		api.db.getDbConfig().then(res => {
 			this.dbTypeList = res.data.data.dbTypeList;
 			this.initKeyMap = res.data.data.initKeyMap;
@@ -83,10 +71,6 @@ export default {
 	watch: {
 		'formEntity.dbType': {
 			handler(curVal, oldVal) {
-				//初次时以服务器数据为准
-				if (oldVal == '') {
-					return;
-				}
 				this.customParams = [];
 				let initKey = this.initKeyMap[curVal];
 				initKey.forEach(function(element) {
@@ -99,24 +83,14 @@ export default {
 		}
 	},
 	methods: {
-		changeType(curVal) {
-			this.customParams = [];
-			let initKey = this.initKeyMap[curVal];
-			initKey.forEach(function(element) {
-				this.customParams.push({
-					key: element,
-					value: ""
-				})
-			}, this);
-		},
 		closeDialog() {
 			//父页面更新列表
 			this.$parent.loadPage();
-			this.$router.push({ path: '/db' });
+			this.$router.push({ path: '/user' });
 		},
-		handleUpdate() {
-			this.formEntity.params = util.covertObjToMap(this.customParams);
-			api.db.updateDb(this.formEntity).then(res => {
+		handleAdd() {			
+			Object.assign(this.formEntity.params, util.covertObjToMap(this.customParams));
+			api.db.addDb(this.formEntity).then(res => {
 				this.closeDialog();
 			})
 		},
