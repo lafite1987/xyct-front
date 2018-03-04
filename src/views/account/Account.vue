@@ -109,7 +109,7 @@ export default {
       this.sels = sels;
     },
     loadPage() {
-      storeSession.set("USER-QUERY", this.queryParam);
+      storeSession.set("ACCOUNT-QUERY", this.queryParam);
       api.account.list(this.queryParam).then(res => {
         this.pageInfo.tableList = res.data.data.list;
         this.pageInfo.page = res.data.data.page;

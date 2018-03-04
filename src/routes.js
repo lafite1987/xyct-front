@@ -3,10 +3,6 @@ import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 
-import Project from './views/project/Project.vue'
-import ProjectAdd from './views/project/ProjectAdd.vue'
-import ProjectUpdate from './views/project/ProjectUpdate.vue'
-
 import User from './views/user/User.vue'
 import UserAdd from './views/user/UserAdd.vue'
 import UserUpdate from './views/user/UserUpdate.vue'
@@ -32,21 +28,10 @@ let routes = [{
     component: Home,
     name: '',
     children: [{
-        path: '/project',
-        component: Project,
+        path: '/user',
+        component: User,
         name: '工作看板',
-        children: [{
-            path: 'add',
-            component: ProjectAdd,
-            name: 'projectAdd',
-            alias: '新建项目'
-        },
-        {
-            path: ':id/update',
-            component: ProjectUpdate,
-            name: 'projectUpdate',
-            alias: '更新项目'
-        },
+        children: [
         ]
     }]
 },

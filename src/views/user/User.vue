@@ -3,10 +3,10 @@
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
 				<el-form-item label="用户昵称">
-					<el-input v-model="queryParam.nickname" placeholder="用户昵称"></el-input>
+					<el-input v-model="queryParam.query.nickname" placeholder="用户昵称"></el-input>
 				</el-form-item>
 				<el-form-item label="用户类型">
-					<el-select filterable v-model="queryParam.userType">
+					<el-select filterable v-model="queryParam.query.userType">
 						<el-option value="" label="所有" />
 						<el-option v-for="item in userTypeList" :value="item.code" :label="item.name" :key="item.code" />
 					</el-select>
@@ -23,9 +23,13 @@
 			</el-table-column>
 			<el-table-column prop="nickname" label="用户昵称" min-width="100">
 			</el-table-column>
-			<el-table-column prop="userType" label="类型" min-width="100" align="center">
+			<el-table-column prop="userType" label="类型" min-width="50" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.userType==1" type="1">用户</el-tag>
+          <el-tag v-if="scope.row.userType==2" type="2">员工</el-tag>
+        </template>
 			</el-table-column>
-      <el-table-column prop="openid" label="微信号" min-width="100">
+      <el-table-column prop="openid" label="微信号" min-width="200">
 			</el-table-column>
       <el-table-column prop="balance" label="余额" min-width="100">
 			</el-table-column>
@@ -85,8 +89,10 @@ export default {
       sels: [],
       //检索参数
       queryParam: storeSession.get("USER-QUERY") || {
-        nickname: null,
-        userType: null,
+        query: {
+          nickname: null,
+          userType: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,
@@ -137,8 +143,10 @@ export default {
     },
     reset() {
       this.queryParam = {
-        dbName: null,
-        dbType: null,
+        query:{
+          nickname: null,
+          phone: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,

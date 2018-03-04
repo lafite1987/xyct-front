@@ -5,7 +5,6 @@ import * as account from './modules/accountApi.js'
 // import * as auth from './modules/authApi.js'
 import * as user from './modules/userApi.js'
 import * as menu from './modules/menuApi.js'
-import * as project from './modules/projectApi.js'
 import * as validator from './modules/validatorApi.js'
 
 import * as order from './modules/orderApi.js'
@@ -17,7 +16,6 @@ export default {
     // auth,
     user,
     menu,
-    project,
     validator,
     order
 }

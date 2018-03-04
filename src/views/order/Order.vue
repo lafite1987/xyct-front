@@ -30,8 +30,9 @@
 			</el-table-column>
       <el-table-column prop="payStatus" label="支付状态" min-width="100">
         <template slot-scope="scope">
-          <el-tag v-if="1" prop="scope.row.payStatus" label="创建">创建</el-tag>
-          <el-tag v-if="2" prop="scope.row.payStatus" >待支付</el-tag>
+          <el-tag v-if="scope.row.payStatus==1" type="1">创建</el-tag>
+          <el-tag v-if="scope.row.payStatus==2" type="2">待支付</el-tag>
+          <el-tag v-if="scope.row.payStatus==3" type="3">已支付</el-tag>
         </template>
 			</el-table-column>
       <el-table-column prop="userId" label="用户Id" min-width="100">
