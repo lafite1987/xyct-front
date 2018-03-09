@@ -1,29 +1,10 @@
 <template>
-	<el-dialog title="更新数据库" :visible.sync="showDialog" size="small" @close="closeDialog">
+	<el-dialog title="更新用户" :visible.sync="showDialog" size="small" @close="closeDialog">
 		<el-form :model="formEntity" label-width="100px" label-suffix=":">
-			<el-form-item label="数据库名称">
-				<el-input v-model="formEntity.dbName"></el-input>
-			</el-form-item>
-			<el-form-item label="数据库类型">
-				<el-select filterable v-model="formEntity.dbType">
-					<el-option v-for="item in dbTypeList" :value="item" :label="item" :key="item" />
+			<el-form-item label="用户类型">
+				<el-select filterable v-model="formEntity.userType">
+					<el-option v-for="item in userTypeList" :value="item.code" :label="item.name" :key="item.code" />
 				</el-select>
-			</el-form-item>
-			<el-form-item label="">
-				<el-button type="primary" size="small" @click="addParam">新增自定义参数</el-button>
-			</el-form-item>
-			<el-form-item label="" v-for="(item,index) in customParams" :key="index">
-				<el-row :gutter="15">
-					<el-col :span="11">
-						<el-input v-model="item.key"></el-input>
-					</el-col>
-					<el-col :span="11">
-						<el-input v-model="item.value"></el-input>
-					</el-col>
-					<el-col :span="2" style="text-align:right">
-						<el-button type="danger" size="small" @click="deleteParam(index)">删除</el-button>
-					</el-col>
-				</el-row>
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
@@ -53,85 +34,27 @@ export default {
 			showDialog: true,
 			//新建数据库实例
 			formEntity: {
-				dbType: ""
+				
 			},
-			dbTypeList: [],
-			initKeyMap: null,
-			customParams: []
+			userTypeList: [{code : 1, name : "用户"}, {code : 2, name : "员工"}],
 		}
 	},
 	created() {
-		api.db.detailDb(this.$route.params.id).then(res => {
+		api.user.detail(this.$route.params.id).then(res => {
 			this.formEntity = res.data.data;
-			let totalKV = this.formEntity.params;
-
-			this.formEntity.params = {};
-			this.customParams = [];
-
-			for (var i in totalKV) {
-				this.customParams.push({
-					key: i,
-					value: totalKV[i]
-				});
-			}
 		});
-		api.db.getDbConfig().then(res => {
-			this.dbTypeList = res.data.data.dbTypeList;
-			this.initKeyMap = res.data.data.initKeyMap;
-		});
-	},
-	watch: {
-		'formEntity.dbType': {
-			handler(curVal, oldVal) {
-				//初次时以服务器数据为准
-				if (oldVal == '') {
-					return;
-				}
-				this.customParams = [];
-				let initKey = this.initKeyMap[curVal];
-				initKey.forEach(function(element) {
-					this.customParams.push({
-						key: element,
-						value: ""
-					})
-				}, this);
-			}
-		}
 	},
 	methods: {
-		changeType(curVal) {
-			this.customParams = [];
-			let initKey = this.initKeyMap[curVal];
-			initKey.forEach(function(element) {
-				this.customParams.push({
-					key: element,
-					value: ""
-				})
-			}, this);
-		},
 		closeDialog() {
 			//父页面更新列表
 			this.$parent.loadPage();
 			this.$router.push({ path: '/user' });
 		},
 		handleUpdate() {
-			this.formEntity.params = util.covertObjToMap(this.customParams);
-			api.db.updateDb(this.formEntity).then(res => {
+			api.user.update(this.formEntity).then(res => {
 				this.closeDialog();
 			})
 		},
-		addParam() {
-			this.customParams.push({
-				key: "",
-				value: ""
-			});
-		},
-		deleteParam(index) {
-			let newParams = [];
-			newParams = newParams.concat(this.customParams.slice(0, index));
-			newParams = newParams.concat(this.customParams.slice(index + 1));
-			this.customParams = newParams;
-		}
 	}
 }
 </script>

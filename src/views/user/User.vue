@@ -21,6 +21,11 @@
 		<el-table :data="pageInfo.tableList" highlight-current-row stripe border max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="index" width="60" align="center">
 			</el-table-column>
+      <el-table-column prop="avatar" label="头像" width="80">
+        <template slot-scope="scope">
+      <img  :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
+    </template>
+    </el-table-column>
 			<el-table-column prop="nickname" label="用户昵称" min-width="100">
 			</el-table-column>
 			<el-table-column prop="userType" label="类型" min-width="50" align="center">
@@ -145,7 +150,7 @@ export default {
       this.queryParam = {
         query:{
           nickname: null,
-          phone: null,
+          userType: null,
         },
         page: {
           currentPage: 1,

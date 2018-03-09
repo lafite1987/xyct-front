@@ -3,10 +3,13 @@
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
 				<el-form-item label="订单号">
-					<el-input v-model="queryParam.orderId" placeholder="订单号"></el-input>
+					<el-input v-model="queryParam.query.orderId" placeholder="订单号"></el-input>
+				</el-form-item>
+        <el-form-item label="微信订单号">
+					<el-input v-model="queryParam.query.outTradeNo" placeholder="微信订单号"></el-input>
 				</el-form-item>
 				<el-form-item label="支付状态">
-					<el-select filterable v-model="queryParam.payStatus">
+					<el-select filterable v-model="queryParam.query.payStatus">
 						<el-option value="" label="所有" />
 						<el-option v-for="item in payStatusList" :value="item.code" :label="item.name" :key="item.code" />
 					</el-select>
@@ -88,8 +91,11 @@ export default {
       sels: [],
       //检索参数
       queryParam: storeSession.get("ORDER-QUERY") || {
-        orderId: null,
-        payStatusType: null,
+        query: {
+          orderId: null,
+          outTradeNo: null,
+          payStatusType: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,
@@ -140,8 +146,11 @@ export default {
     },
     reset() {
       this.queryParam = {
-        dbName: null,
-        dbType: null,
+        query: {
+          orderId: null,
+          outTradeNo: null,
+          payStatusType: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,

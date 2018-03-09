@@ -3,10 +3,10 @@
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
 				<el-form-item label="账户名">
-					<el-input v-model="queryParam.username" placeholder="账户名"></el-input>
+					<el-input v-model="queryParam.query.username" placeholder="账户名"></el-input>
 				</el-form-item>
         <el-form-item label="手机号">
-					<el-input v-model="queryParam.phone" placeholder="手机号"></el-input>
+					<el-input v-model="queryParam.query.phone" placeholder="手机号"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small" @click="loadPage">查询</el-button>
@@ -78,8 +78,10 @@ export default {
       sels: [],
       //检索参数
       queryParam: storeSession.get("ACCOUNT-QUERY") || {
-        username: null,
-        phone: null,
+        query: {
+          username: null,
+          phone: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,
@@ -130,8 +132,10 @@ export default {
     },
     reset() {
       this.queryParam = {
-        username: null,
-        phone: null,
+        query: {
+          username: null,
+          phone: null,
+        },
         page: {
           currentPage: 1,
           pageSize: 15,

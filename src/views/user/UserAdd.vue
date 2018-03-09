@@ -1,10 +1,7 @@
 <template>
-	<el-dialog title="新增数据库" :visible.sync="showDialog" size="small" @close="closeDialog">
+	<el-dialog title="新增用户" :visible.sync="showDialog" size="small" @close="closeDialog">
 		<el-form :model="formEntity" label-width="100px" label-suffix=":">
-			<el-form-item label="数据库名称">
-				<el-input v-model="formEntity.dbName"></el-input>
-			</el-form-item>
-			<el-form-item label="数据库类型">
+			<el-form-item label="用户类型">
 				<el-select filterable v-model="formEntity.dbType">
 					<el-option v-for="item in dbTypeList" :value="item" :label="item" :key="item" />
 				</el-select>
