@@ -2,14 +2,8 @@
 	<div>
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
-				<el-form-item label="用户昵称">
-					<el-input v-model="queryParam.query.nickname" placeholder="用户昵称"></el-input>
-				</el-form-item>
-				<el-form-item label="用户类型">
-					<el-select filterable v-model="queryParam.query.userType">
-						<el-option value="" label="所有" />
-						<el-option v-for="item in userTypeList" :value="item.code" :label="item.name" :key="item.code" />
-					</el-select>
+				<el-form-item label="商品Id">
+					<el-input v-model="queryParam.query.productId" placeholder="商品Id"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small" @click="loadPage">查询</el-button>
@@ -17,27 +11,17 @@
 				</el-form-item>
 			</el-form>
 		</div>
+		<el-button type="primary" size="small" @click="$router.push({ name: 'productAdd' })">添加商品</el-button>
 		<el-table :data="pageInfo.tableList" highlight-current-row stripe border max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="index" width="60" align="center">
 			</el-table-column>
-      <el-table-column prop="avatar" label="头像" width="80">
-        <template slot-scope="scope">
-      <img  :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
-    </template>
-    </el-table-column>
-			<el-table-column prop="nickname" label="用户昵称" min-width="100">
+			<el-table-column prop="id" label="商品Id" min-width="100">
 			</el-table-column>
-			<el-table-column prop="userType" label="类型" min-width="50" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.userType==1" type="1">用户</el-tag>
-          <el-tag v-if="scope.row.userType==2" type="2">员工</el-tag>
-        </template>
+      <el-table-column prop="price" label="价格" min-width="100">
 			</el-table-column>
-      <el-table-column prop="openid" label="微信号" min-width="200">
+			<el-table-column prop="title" label="标题" min-width="100" align="center">
 			</el-table-column>
-      <el-table-column prop="balance" label="余额" min-width="100">
-			</el-table-column>
-      <el-table-column prop="earning" label="收益" min-width="100">
+      <el-table-column prop="description" label="描述" min-width="100" align="left">
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" min-width="120" :formatter="dateFormat" sortable align="center">
 			</el-table-column>
@@ -45,7 +29,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="320" align="center">
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="$router.push({name:'userUpdate',params: {id:scope.row.id}})">编辑</el-button>
+					<el-button type="primary" size="small" @click="$router.push({name:'productUpdate',params: {id:scope.row.id}})">编辑</el-button>
 					<el-button type="danger" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -82,20 +66,11 @@ export default {
           totalNum: 0
         }
       },
-      userTypeList: [{
-        code : 1,
-        name : "用户"
-      }, {
-        code : 2,
-        name : "员工"
-      }],
-      listLoading: false,
       sels: [],
       //检索参数
-      queryParam: storeSession.get("USER-QUERY") || {
+      queryParam: storeSession.get("PRODUCT-QUERY") || {
         query: {
-          nickname: null,
-          userType: null,
+          productId: null,
         },
         page: {
           currentPage: 1,
@@ -126,8 +101,8 @@ export default {
       this.sels = sels;
     },
     loadPage() {
-      storeSession.set("USER-QUERY", this.queryParam);
-      api.user.list(this.queryParam).then(res => {
+      storeSession.set("PRODUCT-QUERY", this.queryParam);
+      api.product.list(this.queryParam).then(res => {
         this.pageInfo.tableList = res.data.data.list;
         this.pageInfo.page = res.data.data.page;
       });
@@ -140,16 +115,15 @@ export default {
     },
     handleDelete(index, row) {
       this.$confirm("确认删除", "警告").then(() => {
-        api.db.deleteDb(row.id).then(res => {
+        api.product.delete(row.id).then(res => {
           this.loadPage();
         });
       });
     },
     reset() {
       this.queryParam = {
-        query:{
-          nickname: null,
-          userType: null,
+        query: {
+          productId: null,
         },
         page: {
           currentPage: 1,

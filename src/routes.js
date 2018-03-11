@@ -11,6 +11,10 @@ import Account from './views/account/Account.vue'
 import AccountAdd from './views/account/AccountAdd.vue'
 import AccountUpdate from './views/account/AccountUpdate.vue'
 
+import Product from './views/product/Product.vue'
+import ProductAdd from './views/product/ProductAdd.vue'
+import ProductUpdate from './views/product/ProductUpdate.vue'
+
 import Order from './views/order/Order.vue'
 
 let routes = [{
@@ -63,7 +67,23 @@ let routes = [{
             name: '订单列表',
             children: [
             ]
-        }, 
+        }, {
+            path: '/product',
+            component: Product,
+            name: '商品列表',
+            children: [{
+                path: 'add',
+                component: ProductAdd,
+                name: 'productAdd',
+                alias: '添加商品'
+            },
+            {
+                path: ':id/update',
+                component: ProductUpdate,
+                name: 'productUpdate',
+                alias: '更新商品'
+            }]
+        }
     ]
 }, 
 {

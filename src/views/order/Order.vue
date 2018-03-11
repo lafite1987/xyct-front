@@ -8,6 +8,9 @@
         <el-form-item label="微信订单号">
 					<el-input v-model="queryParam.query.outTradeNo" placeholder="微信订单号"></el-input>
 				</el-form-item>
+        <el-form-item label="商品Id">
+					<el-input v-model="queryParam.query.productId" placeholder="商品Id"></el-input>
+				</el-form-item>
 				<el-form-item label="支付状态">
 					<el-select filterable v-model="queryParam.query.payStatus">
 						<el-option value="" label="所有" />
@@ -20,8 +23,8 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<el-table :data="pageInfo.tableList" highlight-current-row stripe border max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<el-table-column type="index" width="60" align="center">
+		<el-table :data="pageInfo.tableList" highlight-current-row stripe border :summary-method="getSummaries" show-summary max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+			<el-table-column type="index" width="80" align="center">
 			</el-table-column>
 			<el-table-column prop="id" label="订单号" min-width="100">
 			</el-table-column>
@@ -93,6 +96,7 @@ export default {
       queryParam: storeSession.get("ORDER-QUERY") || {
         query: {
           orderId: null,
+          productId : null,
           outTradeNo: null,
           payStatusType: null,
         },
@@ -121,6 +125,41 @@ export default {
     }
   },
   methods: {
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '总价';
+            return;
+          }
+          if (index === 1 || index === 2 || index === 3) {
+            sums[index] = 'N/A';
+            return;
+          }
+          if (index === 5 || index === 6 || index === 7 || index === 8) {
+            sums[index] = 'N/A';
+            return;
+          }
+          
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += ' 元';
+          } else {
+            sums[index] = 'N/A';
+          }
+        });
+
+        return sums;
+      },
     selsChange(sels) {
       this.sels = sels;
     },
@@ -137,17 +176,11 @@ export default {
     handleCurrentChange(val) {
       this.queryParam.page.currentPage = val;
     },
-    handleDelete(index, row) {
-      this.$confirm("确认删除", "警告").then(() => {
-        api.db.deleteDb(row.id).then(res => {
-          this.loadPage();
-        });
-      });
-    },
     reset() {
       this.queryParam = {
         query: {
           orderId: null,
+          productId: null,
           outTradeNo: null,
           payStatusType: null,
         },
