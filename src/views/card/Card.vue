@@ -2,8 +2,8 @@
 	<div>
 		<div class="queryForm">
 			<el-form :inline="true" :model="queryParam" class="demo-form-inline" label-suffix=":" label-width="100px">
-				<el-form-item label="商品Id">
-					<el-input v-model="queryParam.query.productId" placeholder="商品Id"></el-input>
+				<el-form-item label="卡券Id">
+					<el-input v-model="queryParam.query.cardId" placeholder="卡券Id"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small" @click="loadPage">查询</el-button>
@@ -11,17 +11,33 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<el-button type="primary" size="small" @click="$router.push({ name: 'productAdd' })">添加商品</el-button>
+		<el-button type="primary" size="small" @click="$router.push({ name: 'cardAdd' })">添加卡券</el-button>
 		<el-table :data="pageInfo.tableList" highlight-current-row stripe border max-height="640" v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<el-table-column type="index" width="60" align="center">
+      <el-table-column type="index" width="60" align="center">
 			</el-table-column>
-			<el-table-column prop="id" label="商品Id" min-width="100">
+			<el-table-column prop="id" label="卡券Id" min-width="100" align="center">
 			</el-table-column>
-      <el-table-column prop="price" label="价格" min-width="100">
+      <el-table-column prop="cardType" label="卡券类型" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.cardType=='CASH'" type="CASH">代金券</el-tag>
+          <el-tag v-if="scope.row.cardType=='GIFT'" type="GIFT">礼券</el-tag>
+          <el-tag v-if="scope.row.cardType=='DISCOUNT'" type="DISCOUNT">折扣券</el-tag>
+        </template>
 			</el-table-column>
-			<el-table-column prop="title" label="标题" min-width="100" align="center">
+      <el-table-column prop="leastCost" label="条件" min-width="100" align="center">
 			</el-table-column>
-      <el-table-column prop="description" label="描述" min-width="100" align="left">
+      <el-table-column prop="reduceCost" label="金额" min-width="100" align="center">
+			</el-table-column>
+      <el-table-column prop="quantity" label="库存" min-width="100" align="center">
+			</el-table-column>
+      <el-table-column prop="issuedCount" label="已发放" min-width="100" align="center">
+			</el-table-column>
+      <el-table-column prop="state" label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.state=='1'" type="1">正常</el-tag>
+          <el-tag v-if="scope.row.state=='2'" type="2">暂停发放</el-tag>
+          <el-tag v-if="scope.row.state=='3'" type="3">停止发放</el-tag>
+        </template>
 			</el-table-column>
 			<el-table-column prop="createTime" label="创建时间" min-width="120" :formatter="dateFormat" sortable align="center">
 			</el-table-column>
@@ -29,7 +45,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="320" align="center">
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="$router.push({name:'productUpdate',params: {id:scope.row.id}})">编辑</el-button>
+					<el-button type="primary" size="small" @click="$router.push({name:'cardUpdate',params: {id:scope.row.id}})">编辑</el-button>
 					<el-button type="danger" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -69,9 +85,9 @@ export default {
       sels: [],
       listLoading: false,
       //检索参数
-      queryParam: storeSession.get("PRODUCT-QUERY") || {
+      queryParam: storeSession.get("CARD-QUERY") || {
         query: {
-          productId: null,
+          cardId: null,
         },
         page: {
           currentPage: 1,
@@ -102,8 +118,8 @@ export default {
       this.sels = sels;
     },
     loadPage() {
-      storeSession.set("PRODUCT-QUERY", this.queryParam);
-      api.product.list(this.queryParam).then(res => {
+      storeSession.set("CARD-QUERY", this.queryParam);
+      api.card.list(this.queryParam).then(res => {
         this.pageInfo.tableList = res.data.data.list;
         this.pageInfo.page = res.data.data.page;
       });
@@ -116,7 +132,7 @@ export default {
     },
     handleDelete(index, row) {
       this.$confirm("确认删除", "警告").then(() => {
-        api.product.delete(row.id).then(res => {
+        api.card.del(row.id).then(res => {
           this.loadPage();
         });
       });

@@ -17,6 +17,20 @@
 						<el-option v-for="item in payStatusList" :value="item.code" :label="item.name" :key="item.code" />
 					</el-select>
 				</el-form-item>
+        <el-form-item label="创建时间">
+          <el-date-picker
+					v-model="queryParam.query.startTime"
+					type="date"
+					value-format="timestamp"
+					placeholder="开始时间">
+					</el-date-picker>至
+					<el-date-picker
+						v-model="queryParam.query.endTime"
+						type="date"
+						value-format="timestamp"
+						placeholder="结束时间">
+						</el-date-picker>
+        </el-form-item>
 				<el-form-item>
 					<el-button type="primary" size="small" @click="loadPage">查询</el-button>
 					<el-button type="primary" size="small" @click="reset">重置</el-button>
@@ -99,6 +113,8 @@ export default {
           productId : null,
           outTradeNo: null,
           payStatusType: null,
+          startTime: null,
+          endTime: null,
         },
         page: {
           currentPage: 1,

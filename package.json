@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "echarts": "^3.7.1",
-    "element-ui": "^1.4.12",
+    "element-ui": "^2.2.2",
     "font-awesome": "^4.7.0",
     "moment": "^2.18.1",
     "nprogress": "^0.2.0",

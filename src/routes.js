@@ -3,6 +3,8 @@ import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 
+import Board from './views/board/Board.vue'
+
 import User from './views/user/User.vue'
 import UserAdd from './views/user/UserAdd.vue'
 import UserUpdate from './views/user/UserUpdate.vue'
@@ -14,6 +16,10 @@ import AccountUpdate from './views/account/AccountUpdate.vue'
 import Product from './views/product/Product.vue'
 import ProductAdd from './views/product/ProductAdd.vue'
 import ProductUpdate from './views/product/ProductUpdate.vue'
+
+import Card from './views/card/Card.vue'
+import CardAdd from './views/card/CardAdd.vue'
+import CardUpdate from './views/card/CardUpdate.vue'
 
 import Order from './views/order/Order.vue'
 
@@ -30,10 +36,11 @@ let routes = [{
 {
     path: '/',
     component: Home,
-    name: '',
+    redirect: '/board',
+    name: '工作看板',
     children: [{
-        path: '/user',
-        component: User,
+        path: '/board',
+        component: Board,
         name: '工作看板',
         children: [
         ]
@@ -82,6 +89,22 @@ let routes = [{
                 component: ProductUpdate,
                 name: 'productUpdate',
                 alias: '更新商品'
+            }]
+        }, {
+            path: '/card',
+            component: Card,
+            name: '卡券列表',
+            children: [{
+                path: 'add',
+                component: CardAdd,
+                name: 'cardAdd',
+                alias: '添加卡券'
+            },
+            {
+                path: ':id/update',
+                component: CardUpdate,
+                name: 'cardUpdate',
+                alias: '更新卡券'
             }]
         }
     ]

@@ -9,6 +9,7 @@ import * as validator from './modules/validatorApi.js'
 
 import * as order from './modules/orderApi.js'
 import * as product from './modules/productApi.js'
+import * as card from './modules/cardApi.js'
 
 let prefix = process.env.API_ROOT
 
@@ -19,5 +20,6 @@ export default {
     menu,
     validator,
     order,
-    product
+    product,
+    card
 }

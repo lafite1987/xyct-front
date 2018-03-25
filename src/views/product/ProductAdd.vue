@@ -13,6 +13,11 @@
 			<el-form-item label="商品描述">
 				<el-input v-model="formEntity.description"></el-input>
 			</el-form-item>
+			<el-form-item label="卡券">
+				<el-select filterable v-model="formEntity.cardId">
+					<el-option v-for="item in cardList" :value="item.id" :label="item.title" :key="item.id" />
+				</el-select>
+			</el-form-item>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
 			<el-button size="small" @click="closeDialog">返 回</el-button>
@@ -43,12 +48,15 @@ export default {
 			formEntity: {
 				
 			},
+			cardList:[],
 			initKeyMap: null,
 			customParams: []
 		}
 	},
 	created() {
-		
+		api.card.all().then(res =>{
+			this.cardList = res.data.data;
+		})
 	},
 	watch: {
 		
