@@ -1,4 +1,4 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '""'
+  API_ROOT: '"http://ypaimai.com/wxp"'
 }
