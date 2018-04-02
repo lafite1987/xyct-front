@@ -8,13 +8,10 @@
       </el-select>
     </el-form-item>
     <el-form-item prop="account">
-      <el-input type="text" v-model="authInfo.account" auto-complete="off" placeholder="账号"></el-input>
+      <el-input type="text" v-model="authInfo.username" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="captcha">
-      <el-input type="password" v-model="authInfo.captcha" auto-complete="off" placeholder="验证码"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="default" size="small" style="float:right" @click.native.prevent="getCaptcha" :loading="captchaGetting">获取验证码</el-button>
+      <el-input type="password" v-model="authInfo.password" auto-complete="off" placeholder="账号密码"></el-input>
     </el-form-item>
     <el-form-item style="width:100%;">
       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
@@ -32,15 +29,15 @@ export default {
       logining: false,
       authInfo: {
         accountType: '账户名',
-        account: '',
-        captcha: ''
+        username: '',
+        password: ''
       },
       formRules: {
-        account: [
+        username: [
           { required: true, message: '请输入账号', trigger: 'blur' },
           //{ validator: validaePass }
         ],
-        captcha: [
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           //{ validator: validaePass2 }
         ]
@@ -52,25 +49,16 @@ export default {
     handleReset2() {
       this.$refs.authInfo.resetFields();
     },
-    getCaptcha() {
-      this.captchaGetting = true;
-      api.auth.getCaptcha(this.authInfo).then(res => {
-        this.captchaGetting = false;
-        this.$message({
-          message: '验证码已经下发，请注意查收',
-          type: 'info'
-        });
-      })
-    },
     handleSubmit2(ev) {
       this.$refs.authInfo.validate((valid) => {
         if (valid) {
           this.logining = true;
-          var loginParams = { username: this.authInfo.account, password: this.authInfo.checkPass };
-          api.auth.verifyCaptcha(this.authInfo).then(res => {
+          var loginParams = { username: this.authInfo.account, password: this.authInfo.password };
+          api.auth.login(this.authInfo).then(res => {
             this.logining = false;
-            if (res.data.retcode == 0) {
-              this.$router.push({ path: '/system' });
+            if (res.data.code == 200) {
+              storeSession.set("token", res.data.data.token);
+              this.$router.push({ path: '/' });
             }
           });
         } else {

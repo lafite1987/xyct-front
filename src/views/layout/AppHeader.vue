@@ -38,7 +38,11 @@ export default {
         ...mapActions([
 			'collapse',
 			'setAccountInfo',
-		])
+		]),
+		logout(){
+			storeSession.remove("token");
+			this.$router.push({path: '/login'});
+      },
     },
     computed :{
         ...mapState({

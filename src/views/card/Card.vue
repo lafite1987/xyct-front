@@ -34,7 +34,7 @@
 			</el-table-column>
       <el-table-column prop="state" label="状态" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.state=='1'" type="1">正常</el-tag>
+          <el-tag v-if="scope.row.state=='1'" type="1">正常发放</el-tag>
           <el-tag v-if="scope.row.state=='2'" type="2">暂停发放</el-tag>
           <el-tag v-if="scope.row.state=='3'" type="3">停止发放</el-tag>
         </template>

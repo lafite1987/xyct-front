@@ -1,6 +1,11 @@
 <template>
 	<el-dialog title="新增卡券" :visible.sync="showDialog" size="small" @close="closeDialog">
 		<el-form :model="formEntity" label-width="100px" label-suffix=":">
+			<el-form-item label="卡券状态">
+				<el-select filterable v-model="formEntity.state">
+					<el-option v-for="item in stateList" :value="item.code" :label="item.name" :key="item.code" />
+				</el-select>
+			</el-form-item>
 			<el-form-item label="卡券类型">
 				<el-select filterable v-model="formEntity.cardType">
 					<el-option v-for="item in cardTypeList" :value="item.code" :label="item.name" :key="item.code" />
@@ -14,9 +19,6 @@
 			</el-form-item>
 			<el-form-item label="库存">
 				<el-input v-model="formEntity.quantity"></el-input>
-			</el-form-item>
-			<el-form-item label="限领数量">
-				<el-input v-model="formEntity.perUserLimitCount"></el-input>
 			</el-form-item>
 			<el-form-item label="卡券标题">
 				<el-input v-model="formEntity.title"></el-input>
@@ -32,8 +34,8 @@
 					v-model="formEntity.beginIssuedTime"
 					type="datetime"
 					value-format="timestamp"
-					:default-time="['00:00:00']"
-					placeholder="选择开始时间">
+					placeholder="选择开始时间"
+					:default-time="['00:00:00']">
 					</el-date-picker>至
 					<el-date-picker
 						v-model="formEntity.endIssuedTime"
@@ -90,6 +92,7 @@ export default {
 				
 			},
 			cardTypeList: [{code : "CASH", name : "代金券"}],
+			stateList: [{code : 1, name : "正常发放"}, {code : 2, name : "暂停发放"}, {code : 3, name : "停止发放"}],
 		}
 	},
 	created() {
